@@ -12,6 +12,6 @@ namespace Business.Modelos
 
         public int MaxAge { get; set; } = 100;
         public bool ValidAgeRange => MaxAge > MinAge;
-        public string Name { get; set; }
+        public string Name { get; set; } = String.Empty;
     }
 }

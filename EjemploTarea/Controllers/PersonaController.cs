@@ -6,8 +6,10 @@ using Newtonsoft.Json;
 
 namespace EjemploTarea.Controllers
 {
+    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     [ApiController]
-    [Route("persona")]
+    [Route("persona/{version:apiVersion}")]
     public class PersonaController : ControllerBase
     {
         private readonly ILogger<PersonaController> logger;
@@ -19,7 +21,7 @@ namespace EjemploTarea.Controllers
             _service = service;
             _config = config;
         }
-        [HttpPost()]
+        [HttpPost(),MapToApiVersion("1.0")]
         public ActionResult CrearPersona([FromBody] PersonaDto persona)
         {
             try
@@ -32,23 +34,23 @@ namespace EjemploTarea.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        //[HttpGet()]
-        //public ActionResult ConsultarPersonas()
-        //{
-        //    try
-        //    {
-        //        var result = _service.ConsultarPersona();
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, ex.Message);
-        //    }
-        //}
+        [HttpGet(),MapToApiVersion("1.0")]
+        public ActionResult ConsultarPersonas()
+        {
+            try
+            {
+                var result = _service.ConsultarPersona();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
         //--------------------------ConsultarPersona trae todo, ConsultarPersonaSSSSSS trae las paginadas--------------------------------------
-        [HttpGet()]
-        public ActionResult ConsultarPersonas([FromQuery] PersonaParameters parameters)
+        [HttpGet(), MapToApiVersion("2.0")]
+        public ActionResult ConsultarPersonasv2([FromQuery] PersonaParameters parameters)
         {
             try
             {
@@ -72,7 +74,7 @@ namespace EjemploTarea.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        [HttpGet("{Id}")]
+        [HttpGet("{Id}"), MapToApiVersion("1.0")]
         public ActionResult ConsultarPersonasPorId([FromRoute] string id)
         {
             try
@@ -85,7 +87,7 @@ namespace EjemploTarea.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        [HttpPut("{Id}")]
+        [HttpPut("{Id}"), MapToApiVersion("1.0")]
         public ActionResult ActualizarPersona([FromRoute] string id, [FromBody] PersonaDto persona)
         {
             try
@@ -98,7 +100,7 @@ namespace EjemploTarea.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        [HttpDelete("{Id}")]
+        [HttpDelete("{Id}"), MapToApiVersion("1.0")]
         public ActionResult EliminarPersona([FromRoute] string id) 
         {
             try
@@ -112,4 +114,33 @@ namespace EjemploTarea.Controllers
             }
         }
     }
+
+    //[ApiVersion("2.O")]
+    //[ApiController]
+    //[Route("persona")]
+    //public class PersonaController2: ControllerBase
+    //{
+    //    private readonly ILogger<PersonaController2> logger;
+    //    private readonly IPersonaService _service;
+    //    private readonly IConfiguration _config;
+    //    public PersonaController2(ILogger<PersonaController2> logger, IPersonaService service, IConfiguration config)
+    //    {
+    //        this.logger = logger;
+    //        _service = service;
+    //        _config = config;
+    //    }
+    //    [HttpGet()]
+    //    public ActionResult ConsultarPersonas()
+    //    {
+    //        try
+    //        {
+    //            var result = _service.ConsultarPersona();
+    //            return Ok(result);
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            return StatusCode(500, ex.Message);
+    //        }
+    //    }
+    //}
 }
